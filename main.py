@@ -1,9 +1,9 @@
 """
 Notes:
-    the switch is / will be connected to GPIO2 / pin 3
-    the mosfet is / will be connected to GPIO3 / pin 5
+    the switch is connected to GPIO2 / pin 3
+    the mosfet is connected to GPIO3 / pin 5
     switch ground pin: 9
-    mosfet ground pin: either 9 or 14
+    mosfet ground pin: 14
 """
 import os
 import subprocess
@@ -12,8 +12,8 @@ from signal import pause
 
 from gpiozero import Button, PWMOutputDevice
 
-# this is not a native field for the Button class, but is used to allow mapping
-# a single event and a held event to the same entity.
+# By design, you can't modify attributes of the gpiozero classes after
+# initialization, so we have to define our custom attribute beforehand.
 Button.was_held = False
 
 button = Button(2, hold_time=5)
