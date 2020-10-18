@@ -7,6 +7,8 @@ authors = ["Joe Kaufeld <joe.kaufeld@gmail.com>"]
 [tool.poetry.dependencies]
 python = "^3.9"
 gpiozero = "^1.5.1"
+"RPi.GPIO" = "^0.7.0"
+spidev = "^3.5"
 
 [tool.poetry.dev-dependencies]
 
