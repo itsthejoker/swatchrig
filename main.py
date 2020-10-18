@@ -12,6 +12,10 @@ from signal import pause
 
 from gpiozero import Button
 
+# this is not a native field for the Button class, but is used to allow mapping
+# a single event and a held event to the same entity.
+Button.was_held = False
+
 button = Button(2, hold_time=5)
 todays_folder = str(datetime.now().date())
 
@@ -31,7 +35,17 @@ def take_picture():
         ["raspistill", "-o", f"{datetime.now().strftime('%Y-%m-%d %H-%M-%S')}.jpg"]
     )
 
-button.when_held = shutdown
-button.when_pressed = take_picture
+def held(btn):
+    btn.was_held = True
+
+def released(btn):
+    if btn.was_held:
+        shutdown()
+        return
+    take_picture()
+
+
+button.when_held = held
+button.when_released = released
 
 pause()
