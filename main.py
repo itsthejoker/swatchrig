@@ -10,13 +10,15 @@ import subprocess
 from datetime import datetime
 from signal import pause
 
-from gpiozero import Button
+from gpiozero import Button, PWMOutputDevice
 
 # this is not a native field for the Button class, but is used to allow mapping
 # a single event and a held event to the same entity.
 Button.was_held = False
 
 button = Button(2, hold_time=5)
+mosfet = PWMOutputDevice(3)
+
 todays_folder = str(datetime.now().date())
 
 os.chdir("/share")
@@ -31,12 +33,16 @@ def shutdown():
 
 
 def take_picture():
+    mosfet.on()
     subprocess.call(
         ["raspistill", "-o", f"{datetime.now().strftime('%Y-%m-%d %H-%M-%S')}.jpg"]
     )
+    mosfet.off()
+
 
 def held(btn):
     btn.was_held = True
+
 
 def released(btn):
     if btn.was_held:
