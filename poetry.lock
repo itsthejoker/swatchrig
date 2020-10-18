@@ -26,22 +26,25 @@ doc = ["sphinx"]
 test = ["pytest", "coverage", "mock"]
 
 [[package]]
-name = "picamera"
-version = "1.13"
-description = "A pure Python interface for the Raspberry Pi camera module."
+name = "rpi.gpio"
+version = "0.7.0"
+description = "A module to control Raspberry Pi GPIO channels"
 category = "main"
 optional = false
 python-versions = "*"
 
-[package.extras]
-test = ["coverage", "pytest", "mock", "pillow", "numpy"]
-doc = ["sphinx"]
-array = ["numpy"]
+[[package]]
+name = "spidev"
+version = "3.5"
+description = "Python bindings for Linux SPI access through spidev"
+category = "main"
+optional = false
+python-versions = "*"
 
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "635cee9c481ddf56d2f07186bc72cba3bd55a3d4694adc4d34084cfae047cd95"
+content-hash = "6979a90d86c1f71ee1b82fb05fb6e49de6808f747157516b8806dd8cb6b33bd6"
 
 [metadata.files]
 colorzero = [
@@ -52,6 +55,9 @@ gpiozero = [
     {file = "gpiozero-1.5.1-py2.py3-none-any.whl", hash = "sha256:101044038e71cec8be2fa841d4cea9e50e7962e9fb0287f465298b59e3f06594"},
     {file = "gpiozero-1.5.1.tar.gz", hash = "sha256:ae1a8dc4e6e793ffd8f900968f3290d218052c46347fa0c0503c65fabe422e4d"},
 ]
-picamera = [
-    {file = "picamera-1.13.tar.gz", hash = "sha256:890815aa01e4d855a6a95dd3ad0953b872a6b954982106407df0c5a31a163e50"},
+"rpi.gpio" = [
+    {file = "RPi.GPIO-0.7.0.tar.gz", hash = "sha256:7424bc6c205466764f30f666c18187a0824077daf20b295c42f08aea2cb87d3f"},
+]
+spidev = [
+    {file = "spidev-3.5.tar.gz", hash = "sha256:8a7f5c289f161ea2ac4697fa8a10918232c990678dd0053084b3c43b1363910d"},
 ]
