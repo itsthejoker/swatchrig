@@ -1,0 +1,16 @@
+[Unit]
+Description = The SwatchRig photo daemon
+After = network.target
+
+[Service]
+Type = simple
+ExecStart = /home/pi/app/.venv/bin/python /home/pi/app/main.py
+User = pi
+Group = pi
+Restart = on-failure
+SyslogIdentifier = swatchrig
+RestartSec = 5
+TimeoutStartSec = infinity
+
+[Install]
+WantedBy = multi-user.target
