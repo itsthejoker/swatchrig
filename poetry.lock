@@ -1,0 +1,57 @@
+[[package]]
+name = "colorzero"
+version = "1.1"
+description = "Yet another Python color library."
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.extras]
+doc = ["sphinx"]
+test = ["pytest", "coverage", "mock"]
+
+[[package]]
+name = "gpiozero"
+version = "1.5.1"
+description = "A simple interface to GPIO devices with Raspberry Pi."
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+colorzero = "*"
+
+[package.extras]
+doc = ["sphinx"]
+test = ["pytest", "coverage", "mock"]
+
+[[package]]
+name = "picamera"
+version = "1.13"
+description = "A pure Python interface for the Raspberry Pi camera module."
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.extras]
+test = ["coverage", "pytest", "mock", "pillow", "numpy"]
+doc = ["sphinx"]
+array = ["numpy"]
+
+[metadata]
+lock-version = "1.1"
+python-versions = "^3.9"
+content-hash = "635cee9c481ddf56d2f07186bc72cba3bd55a3d4694adc4d34084cfae047cd95"
+
+[metadata.files]
+colorzero = [
+    {file = "colorzero-1.1-py2.py3-none-any.whl", hash = "sha256:e3c36d15b293de2b2f77ff54a5bd243fffac941ed0a5332d0697a6612a26a0a3"},
+    {file = "colorzero-1.1.tar.gz", hash = "sha256:acba47119b5d8555680d3cda9afe6ccc5481385ccc3c00084dd973f7aa184599"},
+]
+gpiozero = [
+    {file = "gpiozero-1.5.1-py2.py3-none-any.whl", hash = "sha256:101044038e71cec8be2fa841d4cea9e50e7962e9fb0287f465298b59e3f06594"},
+    {file = "gpiozero-1.5.1.tar.gz", hash = "sha256:ae1a8dc4e6e793ffd8f900968f3290d218052c46347fa0c0503c65fabe422e4d"},
+]
+picamera = [
+    {file = "picamera-1.13.tar.gz", hash = "sha256:890815aa01e4d855a6a95dd3ad0953b872a6b954982106407df0c5a31a163e50"},
+]
