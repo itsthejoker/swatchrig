@@ -44,14 +44,21 @@ python-versions = ">=3.7"
 [[package]]
 name = "pidng"
 version = "3.4.7"
-description = "Python utility for converting Raspberry Pi Camera RAW images into Adobe DNG Format."
+description = ""
 category = "main"
 optional = false
-python-versions = ">=3.5,<4.0"
+python-versions = ">=3.5"
+develop = false
 
 [package.dependencies]
-exifread = ">=2.3.2,<3.0.0"
-numpy = ">=1.14,<2.0"
+exifread = "*"
+numpy = "*"
+
+[package.source]
+type = "git"
+url = "https://github.com/Inqbus/PiDNG"
+reference = "master"
+resolved_reference = "56a829f50cfd9f0997d8c72752a81d0e76d8d70f"
 
 [[package]]
 name = "rpi.gpio"
@@ -72,7 +79,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "51d0ed065734aa6c8f4e63960d51b449f6bb3aee89650d319550ac52bd950289"
+content-hash = "9a5f0214282bd0f71ef8a26c86b8e5051960b6435df390e4518b914acae052c5"
 
 [metadata.files]
 colorzero = [
@@ -117,10 +124,7 @@ numpy = [
     {file = "numpy-1.21.1-pp37-pypy37_pp73-manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:2d4d1de6e6fb3d28781c73fbde702ac97f03d79e4ffd6598b880b2d95d62ead4"},
     {file = "numpy-1.21.1.zip", hash = "sha256:dff4af63638afcc57a3dfb9e4b26d434a7a602d225b42d746ea7fe2edf1342fd"},
 ]
-pidng = [
-    {file = "PiDNG-3.4.7-py3-none-any.whl", hash = "sha256:be09f110415fb8ed6c0ab03f7d28c598f069bf63555c378f213ffb97b4600467"},
-    {file = "PiDNG-3.4.7.tar.gz", hash = "sha256:c16d89a323049cdb13d2ae5f675b011ae2681aa11e086163982db8223a7e4047"},
-]
+pidng = []
 "rpi.gpio" = [
     {file = "RPi.GPIO-0.7.0.tar.gz", hash = "sha256:7424bc6c205466764f30f666c18187a0824077daf20b295c42f08aea2cb87d3f"},
 ]
