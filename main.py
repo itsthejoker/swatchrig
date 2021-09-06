@@ -20,12 +20,11 @@ button = Button(2, hold_time=5)
 mosfet = PWMOutputDevice(3)
 
 todays_folder = str(datetime.now().date())
+root_folder = "/home/pi/Pictures"
+PICTURE_ROOT = os.path.join(root_folder, todays_folder)
 
-os.chdir("/share")
-if not os.path.exists(todays_folder):
-    os.mkdir(todays_folder)
-
-os.chdir(todays_folder)
+if not os.path.exists(PICTURE_ROOT):
+    os.mkdir(PICTURE_ROOT)
 
 
 def shutdown():
@@ -33,11 +32,15 @@ def shutdown():
 
 
 def take_picture():
+    filename = os.path.join(
+        PICTURE_ROOT, f"{datetime.now().strftime('%Y-%m-%d--%H-%M-%S')}.jpg"
+    )
     mosfet.on()
     subprocess.call(
-        ["raspistill", "-o", f"{datetime.now().strftime('%Y-%m-%d %H-%M-%S')}.jpg"]
+        ["raspistill", "-r", "-o", filename]
     )
     mosfet.off()
+    # TODO: add pidng conversion with custom profile
 
 
 def held(btn):
