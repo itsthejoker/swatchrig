@@ -34,7 +34,6 @@ custom_profile = Profile(
     illu2=21,
 )
 command = (
-    'DISPLAY=:0.0',
     'xterm',
     '-fullscreen',
     '-fa',
@@ -68,7 +67,7 @@ def shutdown():
 
 
 def convert(filename):
-    p = subprocess.Popen(command, stdout=subprocess.PIPE)
+    p = subprocess.Popen(command, stdout=subprocess.PIPE, env={"DISPLAY": ":0.0"})
     RpiCam.convert(filename)
     p.terminate()
 
@@ -86,7 +85,7 @@ def take_picture():
 
 
 def process_photos():
-    p = subprocess.Popen(command, stdout=subprocess.PIPE)
+    p = subprocess.Popen(command, stdout=subprocess.PIPE, env={"DISPLAY": ":0.0"})
     subprocess.call(
         "parallel -j 4 mogrify -format jpg *.dng".split()
     )
@@ -109,7 +108,8 @@ def released(btn):
     take_picture()
 
 
-button.when_held = held
-button.when_released = released
+if __name__ == "__main__":
+    button.when_held = held
+    button.when_released = released
 
-pause()
+    pause()
