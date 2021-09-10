@@ -10,11 +10,47 @@ import subprocess
 from datetime import datetime
 from signal import pause
 
+from pidng.core import Profile, RPICAM2DNG
 from gpiozero import Button, PWMOutputDevice
+
+
+custom_profile = Profile(
+    name="default",
+    profile_name="Raspberry Pi HQ Camera Custom Profile",
+    as_shot_neutral=None,
+    # fmt: off
+    ccm1=[  # from custom profile
+        [3501, 10000], [576, 10000], [-547, 10000],
+        [-10669, 10000], [18920, 10000], [1658, 10000],
+        [-3479, 10000], [4305, 10000], [6034, 10000],
+    ],
+    ccm2=[
+        [4262, 10000], [-388, 10000], [-326, 10000],
+        [-5086, 10000], [13148, 10000], [2129, 10000],
+        [-1186, 10000], [2345, 10000], [5652, 10000]
+    ],
+    # fmt: on
+    illu1=17,
+    illu2=21,
+)
+command = (
+    'DISPLAY=:0.0',
+    'xterm',
+    '-fullscreen',
+    '-fa',
+    '"Monospace"',
+    '-fs',
+    '14',
+    '-e',
+    '"python /home/pi/app/extras/processing.py"'
+)
+
+RpiCam = RPICAM2DNG(profile=custom_profile)
 
 # By design, you can't modify attributes of the gpiozero classes after
 # initialization, so we have to define our custom attribute beforehand.
 Button.was_held = False
+Button.release_time = None
 
 button = Button(2, hold_time=5)
 mosfet = PWMOutputDevice(3)
@@ -31,6 +67,12 @@ def shutdown():
     subprocess.check_call(['sudo', 'poweroff'])
 
 
+def convert(filename):
+    p = subprocess.Popen(command, stdout=subprocess.PIPE)
+    RpiCam.convert(filename)
+    p.terminate()
+
+
 def take_picture():
     filename = os.path.join(
         PICTURE_ROOT, f"{datetime.now().strftime('%Y-%m-%d--%H-%M-%S')}.jpg"
@@ -40,7 +82,15 @@ def take_picture():
         ["raspistill", "-r", "-o", filename]
     )
     mosfet.off()
-    # TODO: add pidng conversion with custom profile
+    convert(filename)
+
+
+def process_photos():
+    p = subprocess.Popen(command, stdout=subprocess.PIPE)
+    subprocess.call(
+        "parallel -j 4 mogrify -format jpg *.dng".split()
+    )
+    p.terminate()
 
 
 def held(btn):
@@ -49,7 +99,12 @@ def held(btn):
 
 def released(btn):
     if btn.was_held:
-        shutdown()
+        if btn.held_time > 5.0:
+            shutdown()
+        # if it's not enough to trigger a shutdown but it was enough to count
+        # as held, then we'll start processing.
+        process_photos()
+        btn.was_held = False
         return
     take_picture()
 
