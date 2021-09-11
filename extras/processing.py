@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os
 import random
 import signal
@@ -12,6 +13,8 @@ processing = """
 | .__/|_|  \___/ \___\___||___/___/_|_| |_|\__, (_|_|_)
 |_|                                        |___/       
 """
+print()
+print()
 for line in processing.split('\n'):
     print(line.rjust(int((width - 56) / 2 + 56)))
 

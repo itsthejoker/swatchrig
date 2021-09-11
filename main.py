@@ -7,6 +7,7 @@ Notes:
 """
 import os
 import subprocess
+import shlex
 from datetime import datetime
 from signal import pause
 
@@ -34,15 +35,13 @@ custom_profile = Profile(
     illu2=21,
 )
 command = (
-    'xterm',
-    '-fullscreen',
-    '-fa',
-    '"Monospace"',
-    '-fs',
-    '14',
-    '-e',
-    '"python /home/pi/app/extras/processing.py"'
+    "xterm -fullscreen"
+    " -fa 'Monospace'"
+    " -fs 14"
+    " -en en_US.UTF-8"
+    " -e '/home/pi/app/.venv/bin/python /home/pi/app/extras/processing.py'"
 )
+cmd = shlex.split(command)
 
 RpiCam = RPICAM2DNG(profile=custom_profile)
 
@@ -67,7 +66,7 @@ def shutdown():
 
 
 def convert(filename):
-    p = subprocess.Popen(command, stdout=subprocess.PIPE, env={"DISPLAY": ":0.0"})
+    p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=False, env={"DISPLAY": ":0.0"})
     RpiCam.convert(filename)
     p.terminate()
 
@@ -85,7 +84,7 @@ def take_picture():
 
 
 def process_photos():
-    p = subprocess.Popen(command, stdout=subprocess.PIPE, env={"DISPLAY": ":0.0"})
+    p = subprocess.Popen(command, stdout=subprocess.PIPE, shell=False, env={"DISPLAY": ":0.0"})
     subprocess.call(
         "parallel -j 4 mogrify -format jpg *.dng".split()
     )
