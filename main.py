@@ -40,9 +40,12 @@ command = (
     " -fa 'Monospace'"
     " -fs 14"
     " -en en_US.UTF-8"
-    " -e '/home/pi/app/.venv/bin/python /home/pi/app/extras/processing.py'"
+    " -e '/home/pi/app/.venv/bin/python /home/pi/app/extras/{}.py'"
 )
-cmd = shlex.split(command)
+processing_cmd = command.format('processing')
+converting_cmd = command.format('converting')
+processing_cmd = shlex.split(processing_cmd)
+converting_cmd = shlex.split(converting_cmd)
 
 RpiCam = RPICAM2DNG(profile=custom_profile)
 
@@ -67,7 +70,7 @@ def shutdown():
 
 
 def convert(filename):
-    p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=False, env={"DISPLAY": ":0.0"})
+    p = subprocess.Popen(converting_cmd, stdout=subprocess.PIPE, shell=False, env={"DISPLAY": ":0.0"})
     RpiCam.convert(filename)
     p.terminate()
 
@@ -86,11 +89,10 @@ def take_picture():
 
 
 def process_photos():
-    p = subprocess.Popen(
-        command, stdout=subprocess.PIPE, shell=False, env={"DISPLAY": ":0.0"}
-    )
+    p = subprocess.Popen(processing_cmd, stdout=subprocess.PIPE, shell=False, env={"DISPLAY": ":0.0"})
+
     subprocess.call(
-        f"parallel -j 4 mogrify -format jpg {os.path.join(PICTURE_ROOT, '*.dng')}".split()
+        f"mogrify -format jpg {os.path.join(PICTURE_ROOT, '*.dng')}".split()
     )
     p.terminate()
 
