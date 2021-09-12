@@ -35,7 +35,7 @@ def print_message(message, initial_newlines=4, show_dude=True):
     for _ in range(initial_newlines):
         print()
     for line in message.split('\n'):
-        print(line.rjust(int((width - len(line)) / 2 + 56)))
+        print(line.rjust(int((width - len(line)) / 2 + len(line))))
 
     dude = get_dude()
     if show_dude:
