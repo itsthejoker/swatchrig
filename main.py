@@ -81,12 +81,15 @@ def take_picture():
     )
     mosfet.off()
     convert(filename)
+    os.remove(filename)
 
 
 def process_photos():
-    p = subprocess.Popen(command, stdout=subprocess.PIPE, shell=False, env={"DISPLAY": ":0.0"})
+    p = subprocess.Popen(
+        command, stdout=subprocess.PIPE, shell=False, env={"DISPLAY": ":0.0"}
+    )
     subprocess.call(
-        "parallel -j 4 mogrify -format jpg *.dng".split()
+        f"parallel -j 4 mogrify -format jpg {os.path.join(PICTURE_ROOT, '*.dng')}".split()
     )
     p.terminate()
 
