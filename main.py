@@ -4,6 +4,11 @@ Notes:
     the mosfet is connected to GPIO3 / pin 5
     switch ground pin: 9
     mosfet ground pin: 14
+
+    screen mods: in /etc/lightdm/lightdm.conf under [Seat:*]
+    # don't sleep the screen and also remove the cursor
+    xserver-command=X -s 0 -dpms -nocursor
+
 """
 import os
 import subprocess
@@ -44,8 +49,10 @@ command = (
 )
 processing_cmd = command.format('processing')
 converting_cmd = command.format('converting')
+main_screen_cmd = command.format('mainscreen')
 processing_cmd = shlex.split(processing_cmd)
 converting_cmd = shlex.split(converting_cmd)
+main_screen_cmd = shlex.split(main_screen_cmd)
 
 RpiCam = RPICAM2DNG(profile=custom_profile)
 
@@ -126,6 +133,8 @@ def released(btn):
 
 
 if __name__ == "__main__":
+    subprocess.Popen(main_screen_cmd, stdout=subprocess.PIPE, shell=False, env={"DISPLAY": ":0.0"})
+
     button.when_pressed = pressed
     button.when_held = held
     button.when_released = released

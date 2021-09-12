@@ -29,17 +29,17 @@ def get_dude():
     return random.choice(dudes)
 
 
-def print_message(message):
-    # both of our messages happen to be 56 characters long, so we'll run with it for now
+def print_message(message, initial_newlines=4, show_dude=True):
     width, height = os.get_terminal_size()
 
-    for _ in range(4):
+    for _ in range(initial_newlines):
         print()
     for line in message.split('\n'):
-        print(line.rjust(int((width - 56) / 2 + 56)))
+        print(line.rjust(int((width - len(line)) / 2 + 56)))
 
     dude = get_dude()
-    print(dude.rjust(int((width - len(dude)) / 2 + len(dude))))
+    if show_dude:
+        print(dude.rjust(int((width - len(dude)) / 2 + len(dude))))
 
     # this should be killed mercilessly by the subprocess, so just pause until the end of time.
     signal.pause()
