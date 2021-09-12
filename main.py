@@ -8,6 +8,7 @@ Notes:
 import os
 import subprocess
 import shlex
+import time
 from datetime import datetime
 from signal import pause
 
@@ -98,9 +99,21 @@ def held(btn):
     btn.was_held = True
 
 
+# noinspection PyUnusedLocal
+def pressed(*btn):
+    # can't use btn.held_time because the library only makes it available while
+    # the button is physically being pressed, which isn't what we want.
+    global press_time
+    press_time = time.time()
+
+
 def released(btn):
+    global press_time
+
     if btn.was_held:
-        if btn.held_time > 5.0:
+        time_held = int(time.time() - press_time)
+
+        if time_held >= 5:
             shutdown()
         # if it's not enough to trigger a shutdown but it was enough to count
         # as held, then we'll start processing.
@@ -111,6 +124,7 @@ def released(btn):
 
 
 if __name__ == "__main__":
+    button.when_pressed = pressed
     button.when_held = held
     button.when_released = released
 
