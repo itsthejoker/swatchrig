@@ -50,7 +50,7 @@ RpiCam = RPICAM2DNG(profile=custom_profile)
 Button.was_held = False
 Button.release_time = None
 
-button = Button(2, hold_time=5)
+button = Button(2, hold_time=1)
 mosfet = PWMOutputDevice(3)
 
 todays_folder = str(datetime.now().date())
