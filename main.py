@@ -27,14 +27,14 @@ custom_profile = Profile(
     as_shot_neutral=None,
     # fmt: off
     ccm1=[  # from custom profile
-        [3501, 10000], [576, 10000], [-547, 10000],
+        [3501, 10000],   [576, 10000],   [-547, 10000],
         [-10669, 10000], [18920, 10000], [1658, 10000],
-        [-3479, 10000], [4305, 10000], [6034, 10000],
+        [-3479, 10000],  [4305, 10000],  [6034, 10000],
     ],
     ccm2=[
-        [4262, 10000], [-388, 10000], [-326, 10000],
-        [-5086, 10000], [13148, 10000], [2129, 10000],
-        [-1186, 10000], [2345, 10000], [5652, 10000]
+        [4262, 10000],   [-388, 10000],  [-326, 10000],
+        [-5086, 10000],  [13148, 10000], [2129, 10000],
+        [-1186, 10000],  [2345, 10000],  [5652, 10000]
     ],
     # fmt: on
     illu1=17,
@@ -47,12 +47,16 @@ command = (
     " -en en_US.UTF-8"
     " -e '/home/pi/app/.venv/bin/python /home/pi/app/extras/{}.py'"
 )
-processing_cmd = command.format('processing')
-converting_cmd = command.format('converting')
-main_screen_cmd = command.format('mainscreen')
-processing_cmd = shlex.split(processing_cmd)
-converting_cmd = shlex.split(converting_cmd)
-main_screen_cmd = shlex.split(main_screen_cmd)
+
+processing_cmd = shlex.split(command.format('processing'))
+converting_cmd = shlex.split(command.format('converting'))
+main_screen_cmd = shlex.split(command.format('mainscreen'))
+
+POPEN_SETTINGS = {
+    'stdout': subprocess.PIPE,
+    'shell': False,
+    'env': {"DISPLAY": ":0.0"}
+}
 
 RpiCam = RPICAM2DNG(profile=custom_profile)
 
@@ -61,7 +65,7 @@ RpiCam = RPICAM2DNG(profile=custom_profile)
 Button.was_held = False
 Button.release_time = None
 
-button = Button(2, hold_time=1)
+button = Button(2, hold_time=1.5)
 mosfet = PWMOutputDevice(3)
 
 todays_folder = str(datetime.now().date())
@@ -77,7 +81,7 @@ def shutdown():
 
 
 def convert(filename):
-    p = subprocess.Popen(converting_cmd, stdout=subprocess.PIPE, shell=False, env={"DISPLAY": ":0.0"})
+    p = subprocess.Popen(converting_cmd, **POPEN_SETTINGS)
     RpiCam.convert(filename)
     p.terminate()
 
@@ -87,20 +91,19 @@ def take_picture():
         PICTURE_ROOT, f"{datetime.now().strftime('%Y-%m-%d--%H-%M-%S')}.jpg"
     )
     mosfet.on()
-    subprocess.call(
-        ["raspistill", "-r", "-o", filename]
-    )
+    subprocess.call(["raspistill", "-r", "-o", filename])
     mosfet.off()
     convert(filename)
     os.remove(filename)
 
 
 def process_photos():
-    p = subprocess.Popen(processing_cmd, stdout=subprocess.PIPE, shell=False, env={"DISPLAY": ":0.0"})
+    p = subprocess.Popen(processing_cmd, **POPEN_SETTINGS)
 
     subprocess.call(
         f"mogrify -format jpg {os.path.join(PICTURE_ROOT, '*.dng')}".split()
     )
+    subprocess.call(f"rm {os.path.join(PICTURE_ROOT, '*.dng')}".split())
     p.terminate()
 
 
@@ -133,7 +136,7 @@ def released(btn):
 
 
 if __name__ == "__main__":
-    subprocess.Popen(main_screen_cmd, stdout=subprocess.PIPE, shell=False, env={"DISPLAY": ":0.0"})
+    subprocess.Popen(main_screen_cmd, **POPEN_SETTINGS)
 
     button.when_pressed = pressed
     button.when_held = held
