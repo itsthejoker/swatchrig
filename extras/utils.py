@@ -37,8 +37,8 @@ def print_message(message, initial_newlines=4, show_dude=True):
     for line in message.split('\n'):
         print(line.rjust(int((width - len(line)) / 2 + len(line))))
 
-    dude = get_dude()
     if show_dude:
+        dude = get_dude()
         print(dude.rjust(int((width - len(dude)) / 2 + len(dude))))
 
     # this should be killed mercilessly by the subprocess, so just pause until the end of time.

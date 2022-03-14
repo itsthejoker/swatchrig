@@ -91,7 +91,7 @@ def take_picture():
         PICTURE_ROOT, f"{datetime.now().strftime('%Y-%m-%d--%H-%M-%S')}.jpg"
     )
     mosfet.on()
-    subprocess.call(["raspistill", "-r", "-o", filename])
+    subprocess.call(["libcamera-still", "-r", "-o", filename])
     mosfet.off()
     convert(filename)
     os.remove(filename)
