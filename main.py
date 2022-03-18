@@ -28,8 +28,10 @@ command = (
     " -e '/home/pi/app/.venv/bin/python /home/pi/app/extras/{}.py'"
 )
 
-processing_cmd = shlex.split(command.format('processing'))
-converting_cmd = shlex.split(command.format('converting'))
+# The messages are made with https://patorjk.com/software/taag/
+# swatchrig is `graffiti` font, system messages are `big` font
+# Make sure that all the lines have the same number of characters
+uploading_cmd = shlex.split(command.format('uploading'))
 main_screen_cmd = shlex.split(command.format('mainscreen'))
 error_cmd = shlex.split(command.format('error'))
 
@@ -74,7 +76,7 @@ def take_picture():
 
 def sync_photos():
     # note: this requires setting up ssh key access
-    p = subprocess.Popen(processing_cmd, **POPEN_SETTINGS)
+    p = subprocess.Popen(uploading_cmd, **POPEN_SETTINGS)
     response = os.system("ping -c 1 -w2 " + "storagebox.local" + " > /dev/null 2>&1")
     if response == 0:
         command = (
