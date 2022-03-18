@@ -69,7 +69,7 @@ def take_picture():
     # why these numbers? IDK. Found 'em over here and they produce a usable
     # starting point:
     # https://github.com/thomasjacquin/allsky/issues/791#issuecomment-968330633
-    command = f"libcamera-still -r -f -o {filename} --awbgains 3.65,1.5"
+    command = f"libcamera-still -r -f -o {filename} --awbgains 3.5,1.5"
     subprocess.call(shlex.split(command))
     mosfet.off()
 
