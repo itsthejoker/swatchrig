@@ -17,7 +17,7 @@ mainscreen = r"""
                                                             
     │   press button  │     hold 3s      │  hold 6s   │     
     ├─────────────────┼──────────────────┼────────────┤     
-    │   take picture  │  process photos  │  shutdown  │     
+    │   take picture  │  upload photos   │  shutdown  │     
 """
 
 print_message(mainscreen, initial_newlines=1, show_dude=False)
