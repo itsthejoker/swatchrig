@@ -17,29 +17,9 @@ import time
 from datetime import datetime
 from signal import pause
 
-from pidng.core import Profile, RPICAM2DNG
 from gpiozero import Button, PWMOutputDevice
 
 
-custom_profile = Profile(
-    name="default",
-    profile_name="Raspberry Pi HQ Camera Custom Profile",
-    as_shot_neutral=None,
-    # fmt: off
-    ccm1=[  # from custom profile
-        [3501, 10000],   [576, 10000],   [-547, 10000],
-        [-10669, 10000], [18920, 10000], [1658, 10000],
-        [-3479, 10000],  [4305, 10000],  [6034, 10000],
-    ],
-    ccm2=[
-        [4262, 10000],   [-388, 10000],  [-326, 10000],
-        [-5086, 10000],  [13148, 10000], [2129, 10000],
-        [-1186, 10000],  [2345, 10000],  [5652, 10000]
-    ],
-    # fmt: on
-    illu1=17,
-    illu2=21,
-)
 command = (
     "xterm -fullscreen"
     " -fa 'Monospace'"
@@ -51,14 +31,13 @@ command = (
 processing_cmd = shlex.split(command.format('processing'))
 converting_cmd = shlex.split(command.format('converting'))
 main_screen_cmd = shlex.split(command.format('mainscreen'))
+error_cmd = shlex.split(command.format('error'))
 
 POPEN_SETTINGS = {
     'stdout': subprocess.PIPE,
     'shell': False,
     'env': {"DISPLAY": ":0.0"}
 }
-
-RpiCam = RPICAM2DNG(profile=custom_profile)
 
 # By design, you can't modify attributes of the gpiozero classes after
 # initialization, so we have to define our custom attribute beforehand.
@@ -80,31 +59,36 @@ def shutdown():
     subprocess.check_call(['sudo', 'poweroff'])
 
 
-def convert(filename):
-    p = subprocess.Popen(converting_cmd, **POPEN_SETTINGS)
-    RpiCam.convert(filename)
-    p.terminate()
-
-
 def take_picture():
     filename = os.path.join(
         PICTURE_ROOT, f"{datetime.now().strftime('%Y-%m-%d--%H-%M-%S')}.jpg"
     )
     mosfet.on()
-    subprocess.call(["libcamera-still", "-r", "-o", filename])
+    # why these numbers? IDK. Found 'em over here and they produce a usable
+    # starting point:
+    # https://github.com/thomasjacquin/allsky/issues/791#issuecomment-968330633
+    command = f"libcamera-still -r -f -o {filename} --awbgains 3.65,1.5"
+    subprocess.call(shlex.split(command))
     mosfet.off()
-    convert(filename)
-    os.remove(filename)
 
 
-def process_photos():
+def sync_photos():
+    # note: this requires setting up ssh key access
     p = subprocess.Popen(processing_cmd, **POPEN_SETTINGS)
-
-    subprocess.call(
-        f"mogrify -format jpg {os.path.join(PICTURE_ROOT, '*.dng')}".split()
-    )
-    subprocess.call(f"rm {os.path.join(PICTURE_ROOT, '*.dng')}".split())
-    p.terminate()
+    response = os.system("ping -c 1 -w2 " + "storagebox.local" + " > /dev/null 2>&1")
+    if response == 0:
+        command = (
+            "rsync -avr --info=progress2 /home/pi/Pictures/"
+            " root@storagebox.local:/mnt/user/images/swatches/"
+        )
+        subprocess.call(shlex.split(command))
+        p.terminate()
+    else:
+        # swap out screens for the error one
+        p.terminate()
+        error = subprocess.Popen(error_cmd, **POPEN_SETTINGS)
+        time.sleep(5)
+        error.terminate()
 
 
 def held(btn):
@@ -128,8 +112,8 @@ def released(btn):
         if time_held >= 5:
             shutdown()
         # if it's not enough to trigger a shutdown but it was enough to count
-        # as held, then we'll start processing.
-        process_photos()
+        # as held, then we'll try to sync.
+        sync_photos()
         btn.was_held = False
         return
     take_picture()

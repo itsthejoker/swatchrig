@@ -2,16 +2,27 @@ sudo apt update && sudo apt upgrade -y
 sudo apt install make build-essential libssl-dev zlib1g-dev \
 libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm \
 libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev -y
-sudo apt install xterm unclutter imagemagick -y
+sudo apt install xterm imagemagick -y
+
+# remove rpi starting wizard
+# https://forums.raspberrypi.com/viewtopic.php?p=1675205&sid=b2bf7c8693d4a4cd64b2bb6c125a126c#p1675205
+sudo apt purge piwiz -y
 
 curl https://pyenv.run | bash
 
 echo 'export PATH="$HOME/.pyenv/bin:$PATH"' >> .bashrc
 echo 'eval "$(pyenv init --path)"' >> .bashrc
 echo 'eval "$(pyenv virtualenv-init -)"' >> .bashrc
-echo 'DISPLAY=:0.0 xset s noblank' >> .bashrc
-echo 'DISPLAY=:0.0 unclutter -idle 0.01 &' >> .bashrc
 
+mkdir -p .config/lxsession/LXDE-pi/
+touch .config/lxsession/LXDE-pi/autostart
+
+echo '@xset s noblank' >> /home/pi/.config/lxsession/LXDE-pi/autostart
+echo '@xset s off' >> /home/pi/.config/lxsession/LXDE-pi/autostart
+echo '@xset s -dpms' >> /home/pi/.config/lxsession/LXDE-pi/autostart
+
+# https://forums.raspberrypi.com/viewtopic.php?t=234879
+sudo sed -i -- "s/#xserver-command=X/xserver-command=X -nocursor/" /etc/lightdm/lightdm.conf
 
 source .bashrc
 
