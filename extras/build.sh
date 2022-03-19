@@ -18,7 +18,10 @@ curl https://pyenv.run | bash
 echo 'export PATH="$HOME/.pyenv/bin:$PATH"' >> .bashrc
 echo 'eval "$(pyenv init --path)"' >> .bashrc
 echo 'eval "$(pyenv virtualenv-init -)"' >> .bashrc
-echo 'screen -dmS app ~/app/.venv/bin/python ~/app/main.py' >> .bashrc
+
+echo 'if ! screen -list | grep -q "app"; then' >> .bashrc
+echo '    screen -dmS app ~/app/.venv/bin/python ~/app/main.py' >> .bashrc
+echo 'fi' >> .bashrc
 
 # https://forums.raspberrypi.com/viewtopic.php?t=234879
 sudo sed -i -- "s/#xserver-command=X/xserver-command=X -nocursor/" /etc/lightdm/lightdm.conf
