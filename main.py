@@ -127,6 +127,7 @@ def released(btn):
 
         if time_held >= 5:
             sync_photos()
+            btn.was_held = False
             return
 
         take_picture(glow_in_the_dark=True)
