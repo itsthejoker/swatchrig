@@ -61,17 +61,19 @@ def shutdown():
     subprocess.check_call(['sudo', 'poweroff'])
 
 
-def take_picture():
+def take_picture(lights=True):
     filename = os.path.join(
         PICTURE_ROOT, f"{datetime.now().strftime('%Y-%m-%d--%H-%M-%S')}.jpg"
     )
-    mosfet.on()
+    if lights:
+        mosfet.on()
     # why these numbers? IDK. Found 'em over here and they produce a usable
     # starting point:
     # https://github.com/thomasjacquin/allsky/issues/791#issuecomment-968330633
     command = f"libcamera-still -r -f -o {filename} --awbgains 3.5,1.5"
     subprocess.call(shlex.split(command))
-    mosfet.off()
+    if lights:
+        mosfet.off()
 
 
 def sync_photos():
@@ -111,11 +113,13 @@ def released(btn):
     if btn.was_held:
         time_held = int(time.time() - press_time)
 
-        if time_held >= 5:
+        if time_held >= 9:
             shutdown()
-        # if it's not enough to trigger a shutdown but it was enough to count
-        # as held, then we'll try to sync.
-        sync_photos()
+
+        if time_held >= 5:
+            sync_photos()
+
+        take_picture(lights=False)
         btn.was_held = False
         return
     take_picture()
