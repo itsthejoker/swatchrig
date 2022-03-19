@@ -65,7 +65,7 @@ def take_picture(glow_in_the_dark=False):
     filename = os.path.join(
         PICTURE_ROOT, f"{datetime.now().strftime('%Y-%m-%d--%H-%M-%S')}.jpg"
     )
-    if not glow_in_the_dark:
+    if glow_in_the_dark:
         # turn on the lights to energize glow in the dark filaments, then turn
         # 'em off and take the picture
         mosfet.on()
