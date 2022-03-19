@@ -17,7 +17,7 @@ mainscreen = r"""
                                                             
     │   press button  │     hold 3s      │  hold 6s   │     
     ├─────────────────┼──────────────────┼────────────┤     
-    │   take picture  │  pic w/o light   │    sync    │     
+    │   take picture  │  GitD filaments  │    sync    │     
                   -- hold 10s for shutdown --               
 """
 

@@ -61,18 +61,24 @@ def shutdown():
     subprocess.check_call(['sudo', 'poweroff'])
 
 
-def take_picture(lights=True):
+def take_picture(glow_in_the_dark=False):
     filename = os.path.join(
         PICTURE_ROOT, f"{datetime.now().strftime('%Y-%m-%d--%H-%M-%S')}.jpg"
     )
-    if lights:
+    if not glow_in_the_dark:
+        # turn on the lights to energize glow in the dark filaments, then turn
+        # 'em off and take the picture
+        mosfet.on()
+        time.sleep(5)
+        mosfet.off()
+    else:
         mosfet.on()
     # why these numbers? IDK. Found 'em over here and they produce a usable
     # starting point:
     # https://github.com/thomasjacquin/allsky/issues/791#issuecomment-968330633
     command = f"libcamera-still -r -f -o {filename} --awbgains 3.5,1.5"
     subprocess.call(shlex.split(command))
-    if lights:
+    if not glow_in_the_dark:
         mosfet.off()
 
 
@@ -119,7 +125,7 @@ def released(btn):
         if time_held >= 5:
             sync_photos()
 
-        take_picture(lights=False)
+        take_picture(glow_in_the_dark=True)
         btn.was_held = False
         return
     take_picture()
