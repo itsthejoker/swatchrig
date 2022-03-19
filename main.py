@@ -121,9 +121,11 @@ def released(btn):
 
         if time_held >= 9:
             shutdown()
+            return
 
         if time_held >= 5:
             sync_photos()
+            return
 
         take_picture(glow_in_the_dark=True)
         btn.was_held = False
