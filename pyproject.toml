@@ -11,6 +11,7 @@ gpiozero = "^1.5.1"
 spidev = "^3.5"
 pidng = {git = "https://github.com/itsthejoker/PiDNG", tag = "v4.0.3"}
 addict = "^2.4.0"
+picamera2 = "^0.3.6"
 
 [tool.poetry.dev-dependencies]
 
