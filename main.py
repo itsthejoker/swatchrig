@@ -78,7 +78,7 @@ def take_picture(glow_in_the_dark=False):
     # -o: Set the output file name
     # --awbgains: Set explict red and blue gains (disable the automatic AWB algorithm)
     # --shutter: number of microseconds to keep the shutter open for
-    for option in [60, 70, 80, 90, 100, 300, 500, 700]:
+    for option in [600, 650, 700, 750, 800]:
         filename = os.path.join(
             PICTURE_ROOT, f"{datetime.now().strftime('%Y-%m-%d--%H-%M-%S')}-{option}.jpg"
         )
