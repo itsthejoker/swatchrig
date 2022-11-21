@@ -8,7 +8,6 @@ Notes:
     screen mods: in /etc/lightdm/lightdm.conf under [Seat:*]
     # don't sleep the screen and also remove the cursor
     xserver-command=X -s 0 -dpms -nocursor
-
 """
 import os
 import subprocess
@@ -62,9 +61,6 @@ def shutdown():
 
 
 def take_picture(glow_in_the_dark=False):
-    filename = os.path.join(
-        PICTURE_ROOT, f"{datetime.now().strftime('%Y-%m-%d--%H-%M-%S')}.jpg"
-    )
     if glow_in_the_dark:
         # turn on the lights to energize glow in the dark filaments, then turn
         # 'em off and take the picture
@@ -76,8 +72,18 @@ def take_picture(glow_in_the_dark=False):
     # why these numbers? IDK. Found 'em over here and they produce a usable
     # starting point:
     # https://github.com/thomasjacquin/allsky/issues/791#issuecomment-968330633
-    command = f"libcamera-still -r -f -o {filename} --awbgains 3.5,1.5"
-    subprocess.call(shlex.split(command))
+    # Flags:
+    # -r: Also save the file in DNG raw format
+    # -f: Use a fullscreen preview window
+    # -o: Set the output file name
+    # --awbgains: Set explict red and blue gains (disable the automatic AWB algorithm)
+    # --shutter: number of microseconds to keep the shutter open for
+    for option in [300, 400, 500, 600, 700, 800, 900, 1000, 1100]:
+        filename = os.path.join(
+            PICTURE_ROOT, f"{datetime.now().strftime('%Y-%m-%d--%H-%M-%S')}-{option}.jpg"
+        )
+        command = f"libcamera-still -r -f -o {filename} --awbgains 3.5,1.5 --shutter {option}"
+        subprocess.call(shlex.split(command))
     if not glow_in_the_dark:
         mosfet.off()
 
