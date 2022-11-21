@@ -78,12 +78,12 @@ def take_picture(glow_in_the_dark=False):
     # -o: Set the output file name
     # --awbgains: Set explict red and blue gains (disable the automatic AWB algorithm)
     # --shutter: number of microseconds to keep the shutter open for
-    for red in [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5]:
+    for blue in [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5]:
         filename = os.path.join(
-            PICTURE_ROOT, f"{datetime.now().strftime('%Y-%m-%d--%H-%M-%S')}-{red}.jpg"
+            PICTURE_ROOT, f"{datetime.now().strftime('%Y-%m-%d--%H-%M-%S')}-3-{blue}.jpg"
         )
         # command = f"libcamera-still -r -f -o {filename} --awbgains 3.5,1.5 --shutter {option}"
-        command = f"libcamera-still -f -o {filename} --awbgains {red},1.5 --shutter 650"
+        command = f"libcamera-still -f -o {filename} --awbgains 3,{blue} --shutter 650"
         subprocess.call(shlex.split(command))
     if not glow_in_the_dark:
         mosfet.off()
