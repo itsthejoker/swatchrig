@@ -69,19 +69,16 @@ def take_picture(glow_in_the_dark=False):
         mosfet.off()
     else:
         mosfet.on()
-    # why these numbers? IDK. Found 'em over here and they produce a usable
-    # starting point:
-    # https://github.com/thomasjacquin/allsky/issues/791#issuecomment-968330633
+
     # Flags:
-    # -r: Also save the file in DNG raw format
+    # -r: Also save the file in DNG raw format -- currently disabled
     # -f: Use a fullscreen preview window
     # -o: Set the output file name
     # --awbgains: Set explict red and blue gains (disable the automatic AWB algorithm)
     # --shutter: number of microseconds to keep the shutter open for
     filename = os.path.join(
-        PICTURE_ROOT, f"{datetime.now().strftime('%Y-%m-%d--%H-%M-%S')}--3-125--1-255--660.jpg"
+        PICTURE_ROOT, f"{datetime.now().strftime('%Y-%m-%d--%H-%M-%S')}.jpg"
     )
-    # command = f"libcamera-still -r -f -o {filename} --awbgains 3.5,1.5 --shutter {option}"
     command = f"libcamera-still -f -o {filename} --awbgains 3.125,1.255 --shutter 660"
     subprocess.call(shlex.split(command))
     if not glow_in_the_dark:
