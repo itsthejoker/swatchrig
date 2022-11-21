@@ -82,7 +82,7 @@ def take_picture(glow_in_the_dark=False):
         PICTURE_ROOT, f"{datetime.now().strftime('%Y-%m-%d--%H-%M-%S')}--3-25--1-25.jpg"
     )
     # command = f"libcamera-still -r -f -o {filename} --awbgains 3.5,1.5 --shutter {option}"
-    command = f"libcamera-still -f -o {filename} --awbgains 3.25,1.25 --shutter 650"
+    command = f"libcamera-still -f -o {filename} --awbgains 3.125,1.25 --shutter 650"
     subprocess.call(shlex.split(command))
     if not glow_in_the_dark:
         mosfet.off()
