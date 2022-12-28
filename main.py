@@ -101,7 +101,7 @@ def sync_photos():
         )
         subprocess.call(shlex.split(command))
         # make it so that we can actually interact with the photos lol
-        subprocess.call(shlex.split("ssh root@storagebox.local images/fix_perms.sh"))
+        subprocess.call(shlex.split("ssh root@storagebox.local /mnt/user/images/fix_perms.sh"))
         p.terminate()
     else:
         # swap out screens for the error one
