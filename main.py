@@ -39,6 +39,7 @@ POPEN_SETTINGS = {
     'shell': False,
     'env': {"DISPLAY": ":0.0"}
 }
+ROOT_FOLDER = "/home/pi/Pictures"
 
 # By design, you can't modify attributes of the gpiozero classes after
 # initialization, so we have to define our custom attribute beforehand.
@@ -48,13 +49,17 @@ Button.release_time = None
 button = Button(2, hold_time=1.5)
 mosfet = PWMOutputDevice(3)
 
-todays_folder = str(datetime.now().date())
-root_folder = "/home/pi/Pictures"
-PICTURE_ROOT = os.path.join(root_folder, todays_folder)
 
-if not os.path.exists(PICTURE_ROOT):
-    os.mkdir(PICTURE_ROOT)
+def get_folder():
+    todays_folder = str(datetime.now().date())
+    picture_root = os.path.join(ROOT_FOLDER, todays_folder)
 
+    if not os.path.exists(picture_root):
+        # This only comes into play if we delete the new folder accidentally
+        # or if you're photographing after midnight UTC
+        os.mkdir(picture_root)
+
+    return picture_root
 
 def shutdown():
     subprocess.check_call(['sudo', 'poweroff'])
@@ -77,7 +82,7 @@ def take_picture(glow_in_the_dark=False):
     # --awbgains: Set explict red and blue gains (disable the automatic AWB algorithm)
     # --shutter: number of microseconds to keep the shutter open for
     filename = os.path.join(
-        PICTURE_ROOT, f"{datetime.now().strftime('%Y-%m-%d--%H-%M-%S')}.jpg"
+        get_folder(), f"{datetime.now().strftime('%Y-%m-%d--%H-%M-%S')}.jpg"
     )
     command = f"libcamera-still -f -o {filename} --awbgains 3.125,1.255 --shutter 660"
     subprocess.call(shlex.split(command))
