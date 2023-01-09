@@ -15,10 +15,10 @@ mainscreen = r"""
        ║████████████████║▓▓▓▓▓▓▓▓║▒▒▒▒▒▒▒▒║░░░░░░░░║        
        ╚════════════════╩════════╩════════╩════════╝        
                                                             
-    │   press button  │     hold 3s      │  hold 6s   │     
-    ├─────────────────┼──────────────────┼────────────┤     
-    │   take picture  │  GitD filaments  │    sync    │     
-                  -- hold 10s for shutdown --               
+           │   press button  │     hold 3s      │           
+           ├─────────────────┼──────────────────┼           
+           │   take picture  │       sync       │           
+                -- hold 10s for shutdown --                 
 """
 
 print_message(mainscreen, initial_newlines=1, show_dude=False)
