@@ -19,12 +19,14 @@ from signal import pause
 from gpiozero import Button, PWMOutputDevice
 
 
+user = "pi"
+
 command = (
-    "xterm -fullscreen"
-    " -fa 'Monospace'"
-    " -fs 14"
-    " -en en_US.UTF-8"
-    " -e '/home/pi/app/.venv/bin/python /home/pi/app/extras/{}.py'"
+    f"xterm -fullscreen"
+    f" -fa 'Monospace'"
+    f" -fs 14"
+    f" -en en_US.UTF-8"
+    f" -e '/home/{user}/app/.venv/bin/python /home/pi/app/extras/{{}}.py'"
 )
 
 # The messages are made with https://patorjk.com/software/taag/
@@ -39,7 +41,7 @@ POPEN_SETTINGS = {
     'shell': False,
     'env': {"DISPLAY": ":0.0"}
 }
-ROOT_FOLDER = "/home/pi/Pictures"
+ROOT_FOLDER = f"/home/{user}/Pictures"
 
 # By design, you can't modify attributes of the gpiozero classes after
 # initialization, so we have to define our custom attribute beforehand.
@@ -96,8 +98,8 @@ def sync_photos():
     response = os.system("ping -c 1 -w2 " + "storagebox.local" + " > /dev/null 2>&1")
     if response == 0:
         command = (
-            "rsync -avr --info=progress2 /home/pi/Pictures/"
-            " root@storagebox.local:/mnt/user/images/swatches/"
+            f"rsync -avr --info=progress2 /home/{user}/Pictures/"
+            f" root@storagebox.local:/mnt/user/images/swatches/"
         )
         subprocess.call(shlex.split(command))
         # make it so that we can actually interact with the photos lol
