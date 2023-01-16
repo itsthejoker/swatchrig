@@ -5,11 +5,11 @@ description = "The scripts that run the swatchrig."
 authors = ["Joe Kaufeld <joe.kaufeld@gmail.com>"]
 
 [tool.poetry.dependencies]
-python = ">=3.9,<3.11"
+python = ">=3.9,<3.12"
 gpiozero = "^1.5.1"
 "RPi.GPIO" = "^0.7.0"
 spidev = "^3.5"
-pidng = {git = "https://github.com/itsthejoker/PiDNG", tag = "v4.0.3"}
+#pidng = {git = "https://github.com/itsthejoker/PiDNG", tag = "v4.0.3"}
 addict = "^2.4.0"
 picamera2 = "^0.3.6"
 
