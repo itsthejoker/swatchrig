@@ -26,7 +26,7 @@ command = (
     f" -fa 'Monospace'"
     f" -fs 14"
     f" -en en_US.UTF-8"
-    f" -e '/home/{user}/app/.venv/bin/python /home/pi/app/extras/{{}}.py'"
+    f" -e '/home/{user}/app/.venv/bin/python /home/{user}/app/extras/{{}}.py'"
 )
 
 # The messages are made with https://patorjk.com/software/taag/
